@@ -26,14 +26,14 @@ init_logging()
 REVEAL_RESTART_COMMANDS = [Game.OP_REVEAL, Game.OP_RESTART, Game.OP_RESTART_NEW, Game.OP_REVEAL_NEW]
 
 
-@bot.command("/start")
-@bot.command("/?help")
+@bot.command(r"/start")
+@bot.command(r"/?help")
 async def start_poker(chat: Chat, match):
     await chat.send_text(GREETING)
 
 
-@bot.command("(?s)/poker\s+(.+)$")
-@bot.command("/(poker)$")
+@bot.command(r"(?s)/poker\s+(.+)$")
+@bot.command(r"/(poker)$")
 async def start_poker(chat: Chat, match):
     vote_id = str(chat.message["message_id"])
     text = match.group(1)
