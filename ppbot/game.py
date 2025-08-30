@@ -163,7 +163,7 @@ class GameRegistry:
         con = aiosqlite.connect(db_path)
         con.daemon = True
         self._db = await con
-S        await self._db.execute("""
+        await self._db.execute("""
             CREATE TABLE IF NOT EXISTS games (
                 chat_id, 
                 game_id, 
