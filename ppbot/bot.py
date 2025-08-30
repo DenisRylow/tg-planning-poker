@@ -17,7 +17,7 @@ to start game.
 Multiline is also supported
 /poker line1
 line2
-Currently there is only one scale: 1, 2, 3, 5, 8, 13, 20, 40, ❔, ☕
+Currently there is only one scale: 1, 2, 3, 5, 8, 10, 13, 16, 21, 26, 34, 42, 55, ❔, ☕
 """
 
 bot = Bot(TOKEN)

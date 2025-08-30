@@ -5,10 +5,13 @@ import aiosqlite
 
 
 AVAILABLE_POINTS = [
-    "1", "2", "3", "5", "8",
-    "13", "20", "40", "❔", "☕",
+    "1", "2", "3",
+    "5", "8", "10",
+    "13", "16", "21",
+    "26", "34", "42",
+    "55", "❔", "☕",
 ]
-HALF_POINTS = len(AVAILABLE_POINTS) // 2
+IN_ROW_POINTS = 5
 ALL_MARKS = "♥♦♠♣"
 
 
@@ -76,6 +79,38 @@ class Game:
     def get_send_kwargs(self):
         return {"text": self.get_text(), "reply_markup": json.dumps(self.get_markup())}
 
+    def make_keyboarb(self, points_keys):
+        keyboard = []
+        
+        for x in range(0, len(points_keys), IN_ROW_POINTS):
+            keyboard.append(points_keys[x:x + IN_ROW_POINTS])
+        
+        keyboard.append([
+            {
+                "type": "InlineKeyboardButton",
+                "text": "Restart",
+                "callback_data": "{}-click-{}".format(self.OP_RESTART, self.vote_id),
+            },
+            {
+                "type": "InlineKeyboardButton",
+                "text": "Restart 🆕",
+                "callback_data": "{}-click-{}".format(self.OP_RESTART_NEW, self.vote_id),
+            },
+        ])
+        keyboard.append([    
+            {
+                "type": "InlineKeyboardButton",
+                "text": "Open Cards",
+                "callback_data": "{}-click-{}".format(self.OP_REVEAL, self.vote_id),
+            },
+            {
+                "type": "InlineKeyboardButton",
+                "text": "Open Cards 🆕",
+                "callback_data": "{}-click-{}".format(self.OP_REVEAL_NEW, self.vote_id),
+            },   
+        ])
+        return keyboard
+
     def get_markup(self):
         points_keys = [
             {
@@ -87,34 +122,7 @@ class Game:
         ]
         return {
             "type": "InlineKeyboardMarkup",
-            "inline_keyboard": [
-                points_keys[:HALF_POINTS],
-                points_keys[HALF_POINTS:],
-                [
-                    {
-                        "type": "InlineKeyboardButton",
-                        "text": "Restart",
-                        "callback_data": "{}-click-{}".format(self.OP_RESTART, self.vote_id),
-                    },
-                    {
-                        "type": "InlineKeyboardButton",
-                        "text": "Restart 🆕",
-                        "callback_data": "{}-click-{}".format(self.OP_RESTART_NEW, self.vote_id),
-                    },
-                ],
-                [
-                    {
-                        "type": "InlineKeyboardButton",
-                        "text": "Open Cards",
-                        "callback_data": "{}-click-{}".format(self.OP_REVEAL, self.vote_id),
-                    },
-                    {
-                        "type": "InlineKeyboardButton",
-                        "text": "Open Cards 🆕",
-                        "callback_data": "{}-click-{}".format(self.OP_REVEAL_NEW, self.vote_id),
-                    },
-                ],
-            ],
+            "inline_keyboard": self.make_keyboarb(points_keys)
         }
 
     def restart(self):
@@ -155,10 +163,10 @@ class GameRegistry:
         con = aiosqlite.connect(db_path)
         con.daemon = True
         self._db = await con
-        # It's pretty dumb schema, but I'm too lazy for proper normalized tables for this task
-        await self._db.execute("""
+S        await self._db.execute("""
             CREATE TABLE IF NOT EXISTS games (
-                chat_id, game_id, 
+                chat_id, 
+                game_id, 
                 json_data,
                 PRIMARY KEY (chat_id, game_id)
             )

@@ -18,7 +18,7 @@ across multiple lines
 
 Only initiator can open cards or restart game at any moment. 
 
-Currently there is only one scale: 1, 2, 3, 5, 8, 13, 20, 40, ❔, ☕
+Currently there is only one scale: 1, 2, 3, 5, 8, 10, 13, 16, 21, 26, 34, 42, 55, ❔, ☕
 
 # Self-hosted usage
 Bot works with Python 3.6. There is `Dockerfile` and `run.sh` script for convenience
